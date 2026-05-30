@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>najim</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wdth,wght@1,6..12,75,900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: "Nunito Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: italic;
+    font-variation-settings: "wdth" 75, "YTLC" 500;
+    /* Desktop: show full image from left */
+    background: url('bg.png') left center / cover no-repeat;
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Desktop: menu in the blue zone, roughly 65% from left */
+#menu-view {
+    position: absolute;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%) scale(1.6);
+    transform-origin: center center;
+    width: 150px;
+    height: 200px;
+    z-index: 1;
+}
+
+/* Mobile: pan bg to show blue area (70% from left = blue zone) */
+@media (max-width: 768px) {
+    body {
+        background: url('bg.png') 60% center / auto 100% no-repeat;
+    }
+    #menu-view {
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(1.0);
+    }
+}
+
+.text {
+    width: 100%;
+    height: 22px;
+    position: relative;
+}
+
+span.menu-label {
+    position: absolute;
+    letter-spacing: -2px;
+    line-height: 0.8;
+    font-size: 30px;
+    transition: color 0.12s ease-in-out;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    cursor: pointer;
+    display: block;
+}
+
+.hl-shape {
+    position: absolute;
+    top: 0; left: 0;
+    width: 140px; height: 80px;
+    opacity: 0;
+    transition: opacity 0.12s ease-in;
+    pointer-events: none;
+}
+
+.hl-red  { background: rgba(238,92,92,0.616); }
+.hl-white{ background: white; }
+
+.hl-text {
+    position: absolute;
+    top: 0; left: 0;
+    font-size: 30px;
+    color: rgb(220,20,20);
+    letter-spacing: -2px;
+    line-height: 0.8;
+    opacity: 0;
+    transition: opacity 0.12s ease-in;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.active-item > .hl-shape,
+.active-item > .hl-text { opacity: 1; }
+.active-item { color: black !important; z-index: 2 !important; }
+
+#m_skill      { transform: rotate(-28deg) translate(40px,16px); }
+#m_item       { transform: rotate(-14deg) translate(58px,10px); }
+#m_equip      { transform: rotate(-20deg) translate(44px,10px); }
+#m_persona    { transform: rotate(-18deg) translate(30px,4px); }
+#m_stats      { transform: translate(58px,-4px); }
+#m_quest      { transform: rotate(-12deg) translate(40px,4px); }
+#m_socialLink { transform: rotate(-6deg) translate(48px,0px); }
+#m_calendar   { transform: rotate(-4deg) translate(30px,0px); }
+#m_system     { transform: rotate(8deg) translate(52px,-8px); }
+
+#m_skill .hl-red  { width:110px;height:110px; clip-path:polygon(100% 7%, 0 63%, 93% 38%); transform:translate(0px,-38px); }
+#m_skill .hl-white{ width:110px;height:110px; clip-path:polygon(96% 6%, 16% 60%, 90% 38%); transform:translate(-2px,-38px); }
+#m_skill .hl-text { transform:translate(0px,-4px); }
+#m_item .hl-red  { width:130px;height:130px; clip-path:polygon(100% 0, 0 36%, 84% 33%); transform:translate(-8px,-28px); }
+#m_item .hl-white{ width:130px;height:130px; clip-path:polygon(91% 1%, 9% 35%, 81% 33%); transform:translate(-8px,-28px); }
+#m_item .hl-text { transform:translate(0px,-2px); }
+#m_equip .hl-red  { width:140px;height:140px; clip-path:polygon(96% 3%, 0 44%, 80% 34%); transform:translate(-4px,-36px); }
+#m_equip .hl-white{ width:140px;height:140px; clip-path:polygon(92% 2%, 3% 46%, 80% 34%); transform:translate(-4px,-36px); }
+#m_equip .hl-text { transform:translate(0px,-2px); }
+#m_persona .hl-red  { width:180px;height:180px; clip-path:polygon(99% 8%, 0 40%, 88% 39%); transform:translate(-14px,-49px); }
+#m_persona .hl-white{ width:180px;height:180px; clip-path:polygon(93% 6%, 5% 38%, 86% 34%); transform:translate(-14px,-48px); }
+#m_persona .hl-text { transform:translate(0px,-2px); }
+#m_stats .hl-red  { width:140px;height:140px; clip-path:polygon(98% 11%, 0 38%, 84% 35%); transform:translate(0px,-32px); }
+#m_stats .hl-white{ width:140px;height:140px; clip-path:polygon(94% 10%, 4% 39%, 80% 35%); transform:translate(0px,-31px); }
+#m_stats .hl-text { transform:translate(0px,-2px); }
+#m_quest .hl-red  { width:140px;height:140px; clip-path:polygon(98% 13%, 0 41%, 73% 42%); transform:translate(0px,-40px); }
+#m_quest .hl-white{ width:140px;height:140px; clip-path:polygon(94% 11%, 3% 41%, 71% 40%); transform:translate(0px,-39px); }
+#m_quest .hl-text { transform:translate(0px,-2px); }
+#m_socialLink .hl-red  { width:210px;height:210px; clip-path:polygon(100% 18%, 0 43%, 78% 44%); transform:translate(-18px,-74px); }
+#m_socialLink .hl-white{ width:210px;height:210px; clip-path:polygon(100% 22%, 0 41%, 79% 46%); transform:translate(-18px,-74px); }
+#m_socialLink .hl-text { transform:translate(0px,-2px); }
+#m_calendar .hl-red  { width:200px;height:200px; clip-path:polygon(100% 29%, 0 47%, 87% 52%); transform:translate(-10px,-74px); }
+#m_calendar .hl-white{ width:200px;height:200px; clip-path:polygon(96% 28%, 0 47%, 84% 50%); transform:translate(-10px,-74px); }
+#m_calendar .hl-text { transform:translate(0px,-2px); }
+#m_system .hl-red  { width:180px;height:180px; clip-path:polygon(100% 7%, 0 7%, 69% 32%); transform:translate(-12px,-10px); }
+#m_system .hl-white{ width:180px;height:180px; clip-path:polygon(97% 10%, 4% 5%, 67% 32%); transform:translate(-12px,-10px); }
+#m_system .hl-text { transform:translate(0px,-2px); }
+
+#panel-view {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: url('bg.png') 70% center / auto 100% no-repeat;
+    padding: 40px 24px;
+    overflow-y: auto;
+    animation: slideIn 0.2s ease-out;
+    z-index: 10;
+}
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+}
+.back { font-size:14px; opacity:0.6; margin-bottom:32px; cursor:pointer; letter-spacing:-1px; display:inline-block; -webkit-tap-highlight-color:transparent; }
+.back:hover, .back:active { opacity:1; }
+.p-label { font-size:11px; letter-spacing:2px; opacity:0.5; font-style:normal; margin-bottom:6px; }
+.p-value { font-size:36px; letter-spacing:-2px; line-height:0.9; margin-bottom:28px; color:#a1eefd; }
+.p-section { margin-bottom:32px; }
+.p-item { font-size:20px; letter-spacing:-0.5px; border-left:3px solid rgba(161,238,253,0.4); padding-left:12px; margin-bottom:10px; color:#a1eefd; line-height:1.3; }
+.p-sub { font-size:11px; letter-spacing:2px; opacity:0.5; font-style:normal; margin-bottom:6px; margin-top:20px; }
+.social-link { display:flex; align-items:center; gap:10px; font-size:20px; letter-spacing:-0.5px; color:#a1eefd; margin-bottom:14px; text-decoration:none; border-left:3px solid rgba(161,238,253,0.4); padding-left:12px; -webkit-tap-highlight-color:transparent; }
+.social-platform { font-size:11px; letter-spacing:2px; opacity:0.5; font-style:normal; display:block; }
+.empty-note { font-size:16px; opacity:0.3; letter-spacing:-0.5px; }
+</style>
+</head>
+<body>
+<div id="menu-view">
+    <div class="text"><span class="menu-label" id="m_skill" tabindex="0">about me<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">about me</div></span></div>
+    <div class="text"><span class="menu-label" id="m_item" tabindex="0">INTERESTS<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">INTERESTS</div></span></div>
+    <div class="text"><span class="menu-label" id="m_equip" tabindex="0">PROGRESS<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">PROGRESS?</div></span></div>
+    <div class="text"><span class="menu-label" id="m_persona" tabindex="0">PERSONA<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">PERSONA</div></span></div>
+    <div class="text"><span class="menu-label" id="m_stats" tabindex="0">SKILLS<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">SKILLS</div></span></div>
+    <div class="text"><span class="menu-label" id="m_quest" tabindex="0">FACTS<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">FACTS</div></span></div>
+    <div class="text"><span class="menu-label" id="m_socialLink" tabindex="0">CONTACTS<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">CONTACTS</div></span></div>
+    <div class="text"><span class="menu-label" id="m_calendar" tabindex="0">TIMEZONE<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">TIMEZONE¿</div></span></div>
+    <div class="text"><span class="menu-label" id="m_system" tabindex="0">RESUME<div class="hl-shape hl-red"></div><div class="hl-shape hl-white"></div><div class="hl-text">RESUME</div></span></div>
+</div>
+
+<div id="panel-view">
+    <div class="back" id="back-btn">← back</div>
+    <div id="panel-content"></div>
+</div>
+
+<script>
+const ITEMS = [
+    { id: 'm_skill' }, { id: 'm_item' }, { id: 'm_equip' }, { id: 'm_persona' },
+    { id: 'm_stats' }, { id: 'm_quest' }, { id: 'm_socialLink' }, { id: 'm_calendar' }, { id: 'm_system' },
+];
+const PANELS = {
+    m_skill: `<div class="p-section"><div class="p-label">NAME</div><div class="p-value">najim</div></div><div class="p-section"><div class="p-label">AGE</div><div class="p-value">16</div></div>`,
+    m_item: `<div class="p-section"><div class="p-label">INTERESTS</div><div class="p-item">cyber security</div><div class="p-item">mountaineering</div><div class="p-item">astrophysics</div></div>`,
+    m_equip: `<div class="p-section"><div class="p-sub">MOUNTAINEERING</div><div class="p-item">completed hike above 1900m</div><div class="p-sub">ASTROPHYSICS</div><div class="p-item">learned general relativity</div><div class="p-item">learned special relativity</div></div>`,
+    m_persona: `<div class="empty-note">coming soon</div>`,
+    m_stats: `<div class="empty-note">coming soon</div>`,
+    m_quest: `<div class="empty-note">coming soon</div>`,
+    m_socialLink: `<div class="p-section"><div class="p-label">CONTACTS</div><a class="social-link" href="https://tiktok.com/@actonymekc" target="_blank"><span><span class="social-platform">TIKTOK</span>@actonymekc</span></a><a class="social-link" href="https://instagram.com/evengardener" target="_blank"><span><span class="social-platform">INSTAGRAM</span>@evengardener</span></a><div class="social-link"><span><span class="social-platform">XBOX</span>evangarde</span></div></div>`,
+    m_calendar: `<div class="p-section"><div class="p-label">TIMEZONE</div><div class="p-value">CET</div><div class="p-item">UTC+1 (UTC+2 in summer)</div><div class="p-item">France</div></div>`,
+    m_system: null,
+};
+let currentIndex = 0, lastTapped = -1;
+function activate(index) {
+    index = (index + ITEMS.length) % ITEMS.length;
+    currentIndex = index;
+    ITEMS.forEach(cfg => document.getElementById(cfg.id).classList.remove('active-item'));
+    document.getElementById(ITEMS[currentIndex].id).classList.add('active-item');
+    lastTapped = -1;
+}
+function openPanel(index) {
+    const cfg = ITEMS[index];
+    if (cfg.id === 'm_system') return;
+    const content = PANELS[cfg.id];
+    if (content === null) return;
+    document.getElementById('panel-content').innerHTML = content;
+    document.getElementById('menu-view').style.display = 'none';
+    const panel = document.getElementById('panel-view');
+    panel.style.display = 'block';
+    panel.scrollTop = 0;
+}
+function closePanel() {
+    document.getElementById('panel-view').style.display = 'none';
+    document.getElementById('menu-view').style.display = 'block';
+}
+activate(0);
+document.getElementById('back-btn').addEventListener('click', closePanel);
+document.addEventListener('keydown', e => {
+    if (document.getElementById('panel-view').style.display === 'block') { if (e.key === 'Escape') closePanel(); return; }
+    if (e.key === 'Tab') { e.preventDefault(); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); activate(currentIndex + 1); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); activate(currentIndex - 1); }
+    if (e.key === 'Enter') openPanel(currentIndex);
+});
+ITEMS.forEach((cfg, i) => {
+    document.getElementById(cfg.id).addEventListener('click', () => {
+        if (currentIndex === i && lastTapped === i) { openPanel(i); } else { activate(i); lastTapped = i; }
+    });
+});
+let touchStartY = 0;
+document.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+document.addEventListener('touchend', e => {
+    if (document.getElementById('panel-view').style.display === 'block') return;
+    const diff = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(diff) < 30) return;
+    if (diff > 0) activate(currentIndex + 1); else activate(currentIndex - 1);
+}, { passive: true });
+</script>
+</body>
+</html>
